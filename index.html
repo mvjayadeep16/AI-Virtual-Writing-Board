@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0b0d12" />
+<title>AI Virtual Writing Board</title>
+<link rel="stylesheet" href="style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<!-- MediaPipe Hands -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<!-- OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<!-- jsPDF for PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="theme-dark">
+
+<!-- Loading Screen -->
+<div id="loadingScreen" class="loading-screen">
+  <div class="loader-card">
+    <div class="loader-logo">
+      <div class="logo-glow"></div>
+      <span class="logo-mark">AI</span>
+    </div>
+    <h2>AI Virtual Writing Board</h2>
+    <p class="loader-sub">Calibrating sensors • Loading AI models</p>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="app-header glass">
+  <div class="header-left">
+    <div class="brand">
+      <div class="brand-logo">
+        <div class="brand-logo-glow"></div>
+        <span>AI</span>
+      </div>
+      <div class="brand-text">
+        <h1>Virtual Writing Board</h1>
+        <span class="tagline">Air-gesture intelligent canvas</span>
+      </div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="status-pill" id="statusFps"><span class="dot dot-green"></span>FPS <b id="fpsVal">60</b></div>
+    <div class="status-pill" id="statusCam"><span class="dot dot-amber"></span>Camera</div>
+    <div class="status-pill" id="statusAi"><span class="dot dot-amber"></span>AI</div>
+    <div class="status-pill" id="statusMic"><span class="dot dot-gray"></span>Mic</div>
+    <div class="status-pill" id="statusNet"><span class="dot dot-green"></span>Online</div>
+    <button class="icon-btn" id="themeToggle" title="Toggle theme">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Main layout -->
+<main class="app-shell">
+
+  <!-- LEFT PANEL -->
+  <aside class="panel panel-left glass">
+    <div class="panel-header">
+      <h3>Live Camera</h3>
+      <span class="chip" id="camChip">Inactive</span>
+    </div>
+
+    <div class="camera-stage mirror">
+      <video id="cameraVideo" playsinline muted></video>
+      <canvas id="cameraOverlay"></canvas>
+      <div class="cam-badge" id="confBadge">Hand: --%</div>
+    </div>
+
+    <div class="control-grid">
+      <button class="ghost-btn" id="btnStartCam">Start Camera</button>
+      <button class="ghost-btn" id="btnMirror">Mirror</button>
+      <button class="ghost-btn" id="btnSwitchCam">Switch</button>
+      <button class="ghost-btn" id="btnFullscreen">Fullscreen</button>
+    </div>
+
+    <div class="slider-group">
+      <label>Brightness <span id="lblBright">100%</span></label>
+      <input type="range" id="brightness" min="50" max="200" value="100" />
+      <label>Contrast <span id="lblContrast">100%</span></label>
+      <input type="range" id="contrast" min="50" max="200" value="100" />
+      <label>Exposure <span id="lblExp">100%</span></label>
+      <input type="range" id="exposure" min="50" max="200" value="100" />
+    </div>
+
+    <div class="panel-section">
+      <h4>Gesture Guide</h4>
+      <ul class="gesture-list">
+        <li><span class="g-ico">☝️</span> Index finger — Marker</li>
+        <li><span class="g-ico">✋</span> Open palm — Eraser</li>
+        <li><span class="g-ico">✊</span> Closed fist — Stop</li>
+        <li><span class="g-ico">✌️</span> Two fingers — Stop</li>
+        <li><span class="g-ico">🤏</span> Pinch — Stop / hold</li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- CENTER -->
+  <section class="canvas-area">
+    <div class="floating-toolbar glass">
+      <button class="tool-btn active" data-tool="pen" title="Pen">✒️</button>
+      <button class="tool-btn" data-tool="marker" title="Marker">🖊️</button>
+      <button class="tool-btn" data-tool="pencil" title="Pencil">✏️</button>
+      <button class="tool-btn" data-tool="highlighter" title="Highlighter">🖍️</button>
+      <button class="tool-btn" data-tool="neon" title="Neon">💡</button>
+      <button class="tool-btn" data-tool="spray" title="Spray">🎨</button>
+      <button class="tool-btn" data-tool="eraser" title="Eraser">🧽</button>
+      <span class="tool-divider"></span>
+      <button class="tool-btn" data-tool="line" title="Line">／</button>
+      <button class="tool-btn" data-tool="rect" title="Rectangle">▭</button>
+      <button class="tool-btn" data-tool="circle" title="Circle">◯</button>
+      <button class="tool-btn" data-tool="arrow" title="Arrow">➤</button>
+      <button class="tool-btn" data-tool="text" title="Text">T</button>
+      <span class="tool-divider"></span>
+      <button class="tool-btn" id="btnUndo" title="Undo">↶</button>
+      <button class="tool-btn" id="btnRedo" title="Redo">↷</button>
+      <button class="tool-btn" id="btnClear" title="Clear">🗑</button>
+    </div>
+
+    <div class="canvas-stage" id="canvasStage">
+      <canvas id="bgCanvas"></canvas>
+      <canvas id="drawCanvas"></canvas>
+      <canvas id="liveCanvas"></canvas>
+      <div class="laser-dot" id="laserDot"></div>
+    </div>
+
+    <div class="canvas-hud glass">
+      <div class="hud-item">Zoom <b id="zoomVal">100%</b></div>
+      <div class="hud-item">Strokes <b id="strokeCount">0</b></div>
+      <div class="hud-item">Latency <b id="latencyVal">0ms</b></div>
+      <div class="hud-item">Tool <b id="hudTool">pen</b></div>
+      <div class="hud-spacer"></div>
+      <button class="ghost-btn sm" id="btnZoomIn">＋</button>
+      <button class="ghost-btn sm" id="btnZoomOut">－</button>
+      <button class="ghost-btn sm" id="btnZoomReset">Reset</button>
+      <button class="ghost-btn sm" id="btnGrid">Grid</button>
+      <button class="ghost-btn sm" id="btnBg">BG</button>
+    </div>
+  </section>
+
+  <!-- RIGHT PANEL -->
+  <aside class="panel panel-right glass">
+    <div class="tabs">
+      <button class="tab active" data-tab="brush">Brush</button>
+      <button class="tab" data-tab="ai">AI</button>
+      <button class="tab" data-tab="voice">Voice</button>
+      <button class="tab" data-tab="export">Export</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </div>
+
+    <!-- Brush -->
+    <div class="tab-panel active" data-tab="brush">
+      <div class="panel-section">
+        <h4>Color</h4>
+        <input type="color" id="colorPicker" value="#5ac8fa" class="color-input" />
+        <div class="palette" id="palette"></div>
+        <label class="row-label">Opacity <span id="lblOpacity">100%</span></label>
+        <input type="range" id="opacity" min="10" max="100" value="100" />
+        <label class="row-label">Size <span id="lblSize">6 px</span></label>
+        <input type="range" id="size" min="1" max="80" value="6" />
+        <label class="row-label">Smoothing <span id="lblSmooth">60%</span></label>
+        <input type="range" id="smoothing" min="0" max="100" value="60" />
+        <div class="brush-preview" id="brushPreview"></div>
+      </div>
+
+      <div class="panel-section">
+        <h4>Recent</h4>
+        <div class="palette" id="recentColors"></div>
+      </div>
+    </div>
+
+    <!-- AI -->
+    <div class="tab-panel" data-tab="ai">
+      <div class="panel-section">
+        <h4>AI Tools</h4>
+        <button class="primary-btn" id="btnOCR">Recognize Handwriting (OCR)</button>
+        <button class="ghost-btn full" id="btnShapeFix">Auto-Correct Shapes</button>
+        <button class="ghost-btn full" id="btnSmooth">AI Stroke Smoothing</button>
+        <div class="ai-output" id="aiOutput">AI output will appear here.</div>
+      </div>
+      <div class="panel-section">
+        <h4>Smart Suggestions</h4>
+        <div class="suggest-chip">Add a title</div>
+        <div class="suggest-chip">Convert to diagram</div>
+        <div class="suggest-chip">Solve equation</div>
+      </div>
+    </div>
+
+    <!-- Voice -->
+    <div class="tab-panel" data-tab="voice">
+      <div class="panel-section">
+        <h4>Voice Commands</h4>
+        <button class="primary-btn" id="btnVoice">Start Listening</button>
+        <div class="voice-output" id="voiceOutput">Say: "undo", "redo", "clear", "save", "next color"…</div>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div class="tab-panel" data-tab="export">
+      <div class="panel-section">
+        <h4>Export</h4>
+        <div class="control-grid">
+          <button class="ghost-btn" data-export="png">PNG</button>
+          <button class="ghost-btn" data-export="jpeg">JPEG</button>
+          <button class="ghost-btn" data-export="svg">SVG</button>
+          <button class="ghost-btn" data-export="pdf">PDF</button>
+          <button class="ghost-btn" data-export="json">JSON</button>
+        </div>
+        <button class="primary-btn" id="btnSaveProj">Save Project</button>
+        <button class="ghost-btn full" id="btnLoadProj">Load Project</button>
+        <input type="file" id="loadInput" accept=".json" hidden />
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="tab-panel" data-tab="settings">
+      <div class="panel-section">
+        <h4>Settings</h4>
+        <label class="row-label">Gesture Sensitivity <span id="lblGest">70%</span></label>
+        <input type="range" id="gestureSens" min="10" max="100" value="70" />
+        <label class="row-label">FPS Limit <span id="lblFps">60</span></label>
+        <input type="range" id="fpsLimit" min="15" max="120" value="60" />
+        <label class="toggle"><input type="checkbox" id="tglAnim" checked /> Animations</label>
+        <label class="toggle"><input type="checkbox" id="tglSound" /> Sound Effects</label>
+        <label class="toggle"><input type="checkbox" id="tglPerf" /> Performance Mode</label>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script src="js/constants.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/canvas.js"></script>
+<script src="js/camera.js"></script>
+<script src="js/gestures.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
