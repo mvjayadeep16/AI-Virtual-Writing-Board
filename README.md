@@ -305,7 +305,7 @@ Follow these simple steps to run the project on your local machine.
 ## 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+git clone https://github.com/mvjayadeep16/AI-Virtual-Writing-Board.git
 ```
 
 ---
@@ -313,7 +313,7 @@ git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
 ## 2️⃣ Open the Project
 
 ```bash
-cd YOUR_REPOSITORY
+cd AI-Virtual-Writing-Board
 ```
 
 ---
@@ -799,6 +799,7 @@ If you like this project, don't forget to:
 ### ⭐ Star this repository if you enjoyed it!
 
 </div>
+
 ---
 
 <div align="center">
