@@ -193,7 +193,7 @@ making it an excellent demonstration project for students, developers, and AI en
 # ✨ Core Features
 
 | Feature | Description |
-|----------|-------------|
+|----------|------------|
 | 🖐️ AI Hand Tracking | Detects hand landmarks in real time |
 | ✍️ Air Writing | Draw naturally using your finger |
 | 🎨 Drawing Canvas | Smooth handwriting experience |
@@ -239,7 +239,8 @@ The application follows a modular architecture where each component is responsib
        │
        ▼
  Editable Text
-       │
+       
+├── │
        ▼
  PDF / PNG Export
 ```
@@ -265,8 +266,7 @@ The application follows a modular architecture where each component is responsib
 
 ```text
 AI-Virtual-Writing-Board/
-│
-├── css/
+│css/
 │   └── style.css
 │
 ├── js/
@@ -341,7 +341,7 @@ When the application starts, your browser will ask for webcam access.
 Click **Allow**.
 
 <p align="center">
-<img src="screenshots/camera-permission.png" width="70%">
+<img src="images\camera-permission.png" width="70%">
 </p>
 
 Without camera permission, hand tracking cannot function.
