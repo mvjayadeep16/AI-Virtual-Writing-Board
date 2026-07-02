@@ -750,7 +750,7 @@ Chennai, India
 <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github">
 </a>
 
-<a href="https://linkedin.com/in/YOUR_LINKEDIN_USERNAME">
+<a href="https://www.linkedin.com/in/venkata-jayadeep-maddipatla-b1a111385/">
 <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin">
 </a>
 
@@ -912,27 +912,6 @@ This project helped me gain practical experience in:
 - Git & GitHub
 - Open Source Development
 
----
-
-# 📸 Complete Screenshot Gallery
-
-| Home | Air Writing |
-|------|-------------|
-| ![](screenshots/home.png) | ![](screenshots/writing-mode.png) |
-
-| Gesture Detection | Toolbar |
-|------|-----------|
-| ![](screenshots/gesture-detection.png) | ![](screenshots/toolbar.png) |
-
-| Colors | Eraser |
-|------|---------|
-| ![](screenshots/color-selection.png) | ![](screenshots/eraser.png) |
-
-| OCR | PDF Export |
-|------|-----------|
-| ![](screenshots/ocr-result.png) | ![](screenshots/pdf-export.png) |
-
----
 
 # 💡 Did You Know?
 
