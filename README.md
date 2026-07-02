@@ -266,32 +266,33 @@ The application follows a modular architecture where each component is responsib
 
 ```text
 AI-Virtual-Writing-Board/
-│css/
-│   └── style.css
 │
-├── js/
+├── 📁 images/
+│   ├── camera-permission.png
+│   ├── color-selection.png
+│   ├── eraiser.png
+│   ├── gesture-detection.png
+│   ├── hand-detection.png
+│   ├── hello AI.png
+│   ├── home.png
+│   ├── ocr-result.png
+│   ├── pdf-export.png
+│   ├── pdf-exporting.png
+│   ├── project-structure.png
+│   ├── toolbar.png
+│   └── writing-mode.png
+│
+├── 📁 js/
 │   ├── app.js
 │   ├── camera.js
 │   ├── canvas.js
+│   ├── constants.js
 │   ├── gestures.js
-│   ├── utils.js
-│   └── speech.js
+│   └── utils.js
 │
-├── screenshots/
-│   ├── home.png
-│   ├── writing-mode.png
-│   ├── gesture-detection.png
-│   ├── toolbar.png
-│   ├── color-selection.png
-│   ├── eraser.png
-│   ├── ocr-result.png
-│   ├── pdf-export.png
-│   ├── camera-permission.png
-│   └── project-structure.png
-│
-├── index.html
-├── README.md
-└── LICENSE
+├── 📄 index.html
+├── 📄 README.md
+└── 📄 style.css
 ```
 
 ---
